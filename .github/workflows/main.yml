@@ -1,0 +1,13 @@
+on:
+  workflow_dispatch:
+  
+jobs:
+
+  build:
+
+    strategy:
+      matrix:
+        configuration: [Debug]
+
+# run on window latest
+    runs-on: windows-latest #windows-2019 
