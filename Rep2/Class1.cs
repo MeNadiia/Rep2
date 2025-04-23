@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using AventStack.ExtentReports;
 using AventStack.ExtentReports.Reporter;
 using System.Drawing;
+using System.Net.NetworkInformation;
 
 
 namespace Reporting
@@ -16,16 +17,17 @@ namespace Reporting
 
         private ExtentReports extent;
         private ExtentTest test;
-        private string passDirectory = @"C:\Screenshots\Pass\";
-        private string failDirectory = @"C:\Screenshots\Fail\";
-        private string infoDirectory = @"C:\Screenshots\Info\";
+        static private string reportDirectory = @"C:\Reports\";
+        static private string passDirectory = $@"{reportDirectory}Pass\";
+        static private string failDirectory = $@"{reportDirectory}Fail\";
+        static private string infoDirectory = $@"{reportDirectory}Info\";
 
         [SetUp]
         public void InitializeReport()
         {
             extent = new ExtentReports();
-            Directory.CreateDirectory(@"C:\Reports");
-            var spark = new ExtentSparkReporter(@"C:\Reports\Spark.html");
+            Directory.CreateDirectory(reportDirectory);
+            var spark = new ExtentSparkReporter($"{reportDirectory}Spark.html");
             extent.AttachReporter(spark);
 
             // Create directories if they do not exist
