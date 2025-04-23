@@ -21,7 +21,7 @@ jobs:
     
 # Test script / project variables
     env:
-      ConsoleRunnerVersion: 3.17.0  
+      ConsoleRunnerVersion: 4.3.2  
       Solution_Name: Rep2.sln
       Test_Project_Path: Rep2
       Test_Project_DLL: Rep2.dll
@@ -50,7 +50,7 @@ jobs:
       
     - name: Run UnitTests
       run: ./NUnit.ConsoleRunner.${{env.ConsoleRunnerVersion}}/tools/nunit3-console.exe .\${{env.Test_Project_Path}}\bin\Debug\${{env.Test_Project_DLL}} --result=".\reporting\TestResult.xml" --trace=verbose --test=${{inputs.test_scripts}}
-
+      run: ./NUnit.ConsoleRunner.${{env.ConsoleRunnerVersion}}/tools/nunit3-console.exe .\${{env.Test_Project_Path}}\bin\Debug\net48\${{env.Test_Project_DLL}} --result=".\reporting\TestResult.xml" --trace=verbose --test=${{inputs.test_scripts}}
     - name: Upload Extent Report
       if: always()
       uses: actions/upload-artifact@v4
