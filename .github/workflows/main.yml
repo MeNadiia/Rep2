@@ -47,12 +47,14 @@ jobs:
         
     - name: Install NUnit.ConsoleRunner
       run: nuget install NUnit.ConsoleRunner -Version ${{env.ConsoleRunnerVersion}} -DirectDownload -OutputDirectory .
-
-    - name: Change the screen resolution for tests
-      if: always()
-      run: .\qres\qres.exe /x:1920 /y:1080
       
     - name: Run UnitTests
       run: ./NUnit.ConsoleRunner.${{env.ConsoleRunnerVersion}}/tools/nunit3-console.exe .\${{env.Test_Project_Path}}\bin\Debug\net48\${{env.Test_Project_DLL}} --result=".\reporting\TestResult.xml" --trace=verbose --test=${{inputs.test_scripts}}
 
+    - name: Upload Extent Report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: ExtentReport
+        path: Spark.html    # match the path you used in your code
 
