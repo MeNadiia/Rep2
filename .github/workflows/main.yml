@@ -1,7 +1,7 @@
 name: Rep2 - Common Workflow
 
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
       test_scripts:
         description: 'Comma-separated list of test scripts to run'
