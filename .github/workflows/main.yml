@@ -1,30 +1,58 @@
-name: Manual Trigger Workflow with loglevel & tags
-#get log & tags information
+name: Rep2 - Common Workflow
+
 on:
-  workflow_dispatch:
+  workflow_call:
     inputs:
-      logLevel:
-        description: 'Log level'
-        required: true
-        default: 'information'
-        type: choice
-        options:
-          - information
-          - debug
-          - warning
-          - critical
-      tags:
-        description: 'Purpose of Run This Workflow?'
+      test_scripts:
+        description: 'Comma-separated list of test scripts to run'
         required: true
         type: string
 
 jobs:
-  print-tag:
-    runs-on: windows-latest
-    steps:
-      - name: Print the purpose of run
-        run: echo  ${{ inputs.tags }} purpose
 
-      - name: Print the purpose of run2
-        run: echo  ${{ inputs.logLevel }} purpose
+  build:
+
+    strategy:
+      matrix:
+        configuration: [Debug]
+
+# run on window latest
+    runs-on: windows-latest #windows-2019 
+    
+# Test script / project variables
+    env:
+      ConsoleRunnerVersion: 3.17.0  
+      Solution_Name: Rep2.sln
+      Test_Project_Path: Rep2
+      Test_Project_DLL: Rep2.dll
+      tz: Australia/Sydney
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4.1.3
+      with:
+        fetch-depth: 0
+
+    # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v2
+      
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v2.0.0
+      
+    - name: Restore Packages
+      run: nuget restore $Solution_Name
+      
+    - name: Build solution
+      run: msbuild ${{env.Solution_Name}} -t:rebuild -property:Configuration=Debug  
+        
+    - name: Install NUnit.ConsoleRunner
+      run: nuget install NUnit.ConsoleRunner -Version ${{env.ConsoleRunnerVersion}} -DirectDownload -OutputDirectory .
+
+    - name: Change the screen resolution for tests
+      if: always()
+      run: .\qres\qres.exe /x:1920 /y:1080
+      
+    - name: Run UnitTests
+      run: ./NUnit.ConsoleRunner.${{env.ConsoleRunnerVersion}}/tools/nunit3-console.exe .\${{env.Test_Project_Path}}\bin\Debug\net48\${{env.Test_Project_DLL}} --result=".\reporting\TestResult.xml" --trace=verbose --test=${{inputs.test_scripts}}
+
 
