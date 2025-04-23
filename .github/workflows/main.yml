@@ -49,12 +49,12 @@ jobs:
       run: nuget install NUnit.ConsoleRunner -Version ${{env.ConsoleRunnerVersion}} -DirectDownload -OutputDirectory .
       
     - name: Run UnitTests
-      run: ./NUnit.ConsoleRunner.${{env.ConsoleRunnerVersion}}/tools/nunit3-console.exe .\${{env.Test_Project_Path}}\bin\Debug\net48\${{env.Test_Project_DLL}} --result=".\reporting\TestResult.xml" --trace=verbose --test=${{inputs.test_scripts}}
+      run: ./NUnit.ConsoleRunner.${{env.ConsoleRunnerVersion}}/tools/nunit3-console.exe .\${{env.Test_Project_Path}}\bin\Debug\${{env.Test_Project_DLL}} --result=".\reporting\TestResult.xml" --trace=verbose --test=${{inputs.test_scripts}}
 
     - name: Upload Extent Report
       if: always()
       uses: actions/upload-artifact@v4
       with:
         name: ExtentReport
-        path: \reporting\TestResult.xml    # match the path you used in your code
+        path: C:\Reports\Spark.html    # match the path you used in your code
 
