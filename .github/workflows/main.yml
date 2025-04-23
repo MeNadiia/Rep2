@@ -21,7 +21,7 @@ jobs:
     
 # Test script / project variables
     env:
-      ConsoleRunnerVersion: 4.3.2  
+      ConsoleRunnerVersion: 3.17.0 
       Solution_Name: Rep2.sln
       Test_Project_Path: Rep2
       Test_Project_DLL: Rep2.dll
