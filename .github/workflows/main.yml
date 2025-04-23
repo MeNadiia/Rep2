@@ -1,0 +1,60 @@
+name: Rep2 - Common Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      test_scripts:
+        description: 'Comma-separated list of test scripts to run'
+        required: true
+        type: string
+
+jobs:
+
+  build:
+
+    strategy:
+      matrix:
+        configuration: [Debug]
+
+# run on window latest
+    runs-on: windows-latest #windows-2019 
+    
+# Test script / project variables
+    env:
+      ConsoleRunnerVersion: 3.17.0  
+      Solution_Name: Rep2.sln
+      Test_Project_Path: Rep2
+      Test_Project_DLL: Rep2.dll
+      tz: Australia/Sydney
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4.1.3
+      with:
+        fetch-depth: 0
+
+    # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v2
+      
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v2.0.0
+      
+    - name: Restore Packages
+      run: nuget restore $Solution_Name
+      
+    - name: Build solution
+      run: msbuild ${{env.Solution_Name}} -t:rebuild -property:Configuration=Debug  
+        
+    - name: Install NUnit.ConsoleRunner
+      run: nuget install NUnit.ConsoleRunner -Version ${{env.ConsoleRunnerVersion}} -DirectDownload -OutputDirectory .
+      
+    - name: Run UnitTests
+      run: ./NUnit.ConsoleRunner.${{env.ConsoleRunnerVersion}}/tools/nunit3-console.exe .\${{env.Test_Project_Path}}\bin\Debug\net48\${{env.Test_Project_DLL}} --result=".\reporting\TestResult.xml" --trace=verbose --test=${{inputs.test_scripts}}
+
+    - name: Upload Extent Report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: ExtentReport
+        path: \reporting\TestResult.xml    # match the path you used in your code
+
