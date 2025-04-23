@@ -25,3 +25,6 @@ jobs:
       - name: Print the purpose of run
         run: echo  ${{ inputs.tags }} purpose
 
+      - name: Print the purpose of run2
+        run: echo  ${{ inputs.logLevel }} purpose
+
