@@ -56,5 +56,5 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: ExtentReport
-        path: Spark.html    # match the path you used in your code
+        path: \reporting\TestResult.xml    # match the path you used in your code
 
