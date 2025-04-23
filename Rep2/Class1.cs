@@ -12,7 +12,7 @@ namespace Reporting
 {
     public class Class1
     {
-        private bool screenshotForPass = false;
+        private bool screenshotForPass = true;
 
         private ExtentReports extent;
         private ExtentTest test;
@@ -24,7 +24,8 @@ namespace Reporting
         public void InitializeReport()
         {
             extent = new ExtentReports();
-            var spark = new ExtentSparkReporter("Spark.html");
+            Directory.CreateDirectory(@"C:\Reports");
+            var spark = new ExtentSparkReporter(@"C:\Reports\Spark.html");
             extent.AttachReporter(spark);
 
             // Create directories if they do not exist
