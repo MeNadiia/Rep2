@@ -37,7 +37,7 @@ namespace Reporting
             Directory.CreateDirectory(failDirectory);
             Directory.CreateDirectory(infoDirectory);
 
-            File.WriteAllText("report-path.txt", reportFilePath);
+            File.WriteAllText(@"C:\Reports\report-path.txt", reportFilePath);
         }
 
         [TearDown]
