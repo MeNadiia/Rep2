@@ -21,19 +21,23 @@ namespace Reporting
         static private string passDirectory = $@"{reportDirectory}Pass\";
         static private string failDirectory = $@"{reportDirectory}Fail\";
         static private string infoDirectory = $@"{reportDirectory}Info\";
+        public static string reportFilePath;
 
         [SetUp]
         public void InitializeReport()
         {
             extent = new ExtentReports();
             Directory.CreateDirectory(reportDirectory);
-            var spark = new ExtentSparkReporter($"{reportDirectory}Spark.html");
+            reportFilePath = Path.Combine(reportDirectory, "Spark.html");
+            var spark = new ExtentSparkReporter(reportFilePath);
             extent.AttachReporter(spark);
 
             // Create directories if they do not exist
             Directory.CreateDirectory(passDirectory);
             Directory.CreateDirectory(failDirectory);
             Directory.CreateDirectory(infoDirectory);
+
+            File.WriteAllText("report-path.txt", reportFilePath);
         }
 
         [TearDown]
