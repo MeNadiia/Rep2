@@ -53,7 +53,7 @@ jobs:
       #run: ./NUnit.ConsoleRunner.${{env.ConsoleRunnerVersion}}/tools/nunit3-console.exe .\${{env.Test_Project_Path}}\bin\Debug\net48\${{env.Test_Project_DLL}} --result=".\reporting\TestResult.xml" --trace=verbose --test=${{inputs.test_scripts}}
 
     - name: Print file path
-      run: echo $(cat C:\Reports\report-path.txt)
+      run: type C:\Reports\report-path.txt
 
 
 
