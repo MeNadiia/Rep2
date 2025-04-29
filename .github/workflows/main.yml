@@ -54,7 +54,7 @@ jobs:
 
     - name: Read report file path
       id: read-report-path
-      run: echo "REPORT_PATH=$(cat C:\report-path.txt)" >> $GITHUB_ENV
+      run: echo "REPORT_PATH=$(cat C:\Reports\report-path.txt)" >> $GITHUB_ENV
 
     - name: Upload report artifact
       uses: actions/upload-artifact@v3
