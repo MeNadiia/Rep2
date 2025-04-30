@@ -59,11 +59,8 @@ jobs:
         for /f "delims=" %%A in (C:\Reports\report-path.txt) do set "REPORT_PATH=%%A"
         echo REPORT_PATH=%REPORT_PATH% >> %REPORT_PATH%
       
-    - name: Upload report artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: test-report
-        path: ${{ env.REPORT_PATH }}
+    - name: Print REPORT_PATH
+      run: echo "The report path is:${{ env.REPORT_PATH }}"
 
 
     
