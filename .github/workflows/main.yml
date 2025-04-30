@@ -53,24 +53,7 @@ jobs:
       run: ./NUnit.ConsoleRunner.${{env.ConsoleRunnerVersion}}/tools/nunit3-console.exe .\${{env.Test_Project_Path}}\bin\Debug\${{env.Test_Project_DLL}} --result=".\reporting\TestResult.xml" --trace=verbose --test=${{inputs.test_scripts}}
       #run: ./NUnit.ConsoleRunner.${{env.ConsoleRunnerVersion}}/tools/nunit3-console.exe .\${{env.Test_Project_Path}}\bin\Debug\net48\${{env.Test_Project_DLL}} --result=".\reporting\TestResult.xml" --trace=verbose --test=${{inputs.test_scripts}}
 
-    - name: Read File and Set as Environment Variable
-      run: |
-        for /f "delims=" %%A in (C:\Reports\report-path.txt) do set "FILE_CONTENT=%%A"
-        echo FILE_CONTENT=$FILE_CONTENT >> $GITHUB_ENV
+    - name: Read and Print File (Windows)
+      run: type C:\Reports\report-path.txt
 
-      
-    - name: Print REPORT_PATH
-      run: echo "The report path is:${{ env.FILE_CONTENT }}"
-
-    - name: Upload report artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: test-report
-        path: ${{ env.FILE_CONTENT }}
     
-    - name: Upload Extent Report
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: ExtentReport
-        path: C:\Reports    # match the path you used in your code
