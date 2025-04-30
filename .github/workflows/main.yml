@@ -56,14 +56,14 @@ jobs:
     - name: Read File and Set as Environment Variable
       shell: cmd
       run: |
-        for /f "delims=" %%A in (C:\Reports\report-path.txt) do set "FILE_CONTENT=%%A"
-        echo FILE_CONTENT=%FILE_CONTENT% >> %GITHUB_ENV%
+        for /f "delims=" %%A in (C:\Reports\report-path.txt) do set "REPORT_PATH=%%A"
+        echo REPORT_PATH=%REPORT_PATH% >> %REPORT_PATH%
       
-    - name: Use File Content
-      run: echo "The file says:${{ env.FILE_CONTENT }}"
-
-    - name: Print REPORT_PATH
-      run: echo "The report path is:${{ env.REPORT_PATH }}"
+    - name: Upload report artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-report
+        path: ${{ env.REPORT_PATH }}
 
 
     
