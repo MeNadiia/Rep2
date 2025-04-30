@@ -53,10 +53,14 @@ jobs:
       run: ./NUnit.ConsoleRunner.${{env.ConsoleRunnerVersion}}/tools/nunit3-console.exe .\${{env.Test_Project_Path}}\bin\Debug\${{env.Test_Project_DLL}} --result=".\reporting\TestResult.xml" --trace=verbose --test=${{inputs.test_scripts}}
       #run: ./NUnit.ConsoleRunner.${{env.ConsoleRunnerVersion}}/tools/nunit3-console.exe .\${{env.Test_Project_Path}}\bin\Debug\net48\${{env.Test_Project_DLL}} --result=".\reporting\TestResult.xml" --trace=verbose --test=${{inputs.test_scripts}}
 
-    - name: Read File and Set as Environment Variable (Windows)
+    - name: Read File and Set as Environment Variable
+      shell: cmd
       run: |
-        for /f "delims=" %%A in (C:\Reports\report-path.txt) do set "REPORT_PATH=%%A"
-        echo REPORT_PATH=$REPORT_PATH >> $GITHUB_ENV
+        for /f "delims=" %%A in (C:\Reports\report-path.txt) do set "FILE_CONTENT=%%A"
+        echo FILE_CONTENT=%FILE_CONTENT% >> %GITHUB_ENV%
+      
+    - name: Use File Content
+      run: echo "The file says:${{ env.FILE_CONTENT }}"
 
     - name: Print REPORT_PATH
       run: echo "The report path is:${{ env.REPORT_PATH }}"
