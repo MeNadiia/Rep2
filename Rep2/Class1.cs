@@ -28,7 +28,7 @@ namespace Reporting
         {
             extent = new ExtentReports();
             Directory.CreateDirectory(reportDirectory);
-            reportFilePath = Path.Combine(reportDirectory, $"Spark{DateTime.Now}.html");
+            reportFilePath = Path.Combine(reportDirectory, $"Spark{DateTime.Now.ToString(format: "dd_mm_yyyy_hh_mm_ss")}.html");
             var spark = new ExtentSparkReporter(reportFilePath);
             extent.AttachReporter(spark);
 
@@ -106,7 +106,7 @@ namespace Reporting
         [Test]
         public void TestMethod1()
         {
-            InitializeReport();
+            //InitializeReport();
             CreateTest("MyFirstTest");
             LogStep(Status.Pass, "This is a logging event for MyFirstTest, and it passed!");
             CreateTest("MySecondTest");
