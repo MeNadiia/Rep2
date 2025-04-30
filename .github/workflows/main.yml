@@ -56,17 +56,17 @@ jobs:
     - name: Read File and Set as Environment Variable
       run: |
         for /f "delims=" %%A in (C:\Reports\report-path.txt) do set "FILE_CONTENT=%%A"
-        echo REPORT_PATH=$FILE_CONTENT >> $GITHUB_ENV
+        echo FILE_CONTENT=$FILE_CONTENT >> $GITHUB_ENV
 
       
     - name: Print REPORT_PATH
-      run: echo "The report path is:${{ env.REPORT_PATH }}"
+      run: echo "The report path is:${{ env.FILE_CONTENT }}"
 
     - name: Upload report artifact
       uses: actions/upload-artifact@v3
       with:
         name: test-report
-        path: ${{ env.REPORT_PATH }}
+        path: ${{ env.FILE_CONTENT }}
     
     - name: Upload Extent Report
       if: always()
