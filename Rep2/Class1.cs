@@ -28,7 +28,7 @@ namespace Reporting
         {
             extent = new ExtentReports();
             Directory.CreateDirectory(reportDirectory);
-            reportFilePath = Path.Combine(reportDirectory, "Spark.html");
+            reportFilePath = Path.Combine(reportDirectory, $"Spark{DateTime.Now}.html");
             var spark = new ExtentSparkReporter(reportFilePath);
             extent.AttachReporter(spark);
 
