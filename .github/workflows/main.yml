@@ -1,3 +1,4 @@
+
 name: Rep2 - Common Workflow
 
 on:
@@ -51,14 +52,9 @@ jobs:
     - name: Run UnitTests
       run: ./NUnit.ConsoleRunner.${{env.ConsoleRunnerVersion}}/tools/nunit3-console.exe .\${{env.Test_Project_Path}}\bin\Debug\${{env.Test_Project_DLL}} --result=".\reporting\TestResult.xml" --trace=verbose --test=${{inputs.test_scripts}}
       #run: ./NUnit.ConsoleRunner.${{env.ConsoleRunnerVersion}}/tools/nunit3-console.exe .\${{env.Test_Project_Path}}\bin\Debug\net48\${{env.Test_Project_DLL}} --result=".\reporting\TestResult.xml" --trace=verbose --test=${{inputs.test_scripts}}
-
-    - name: Read report file path
-      id: read-report-path
-      run: echo "REPORT_PATH=$(cat C:\Reports\report-path.txt)" >> $GITHUB_ENV
-
-    - name: Upload report artifact
-      uses: actions/upload-artifact@v3
+    - name: Upload Extent Report
+      if: always()
+      uses: actions/upload-artifact@v4
       with:
-        name: test-report
-        path: ${{ env.REPORT_PATH }}
-
+        name: ExtentReport
+        path: C:\Reports    # match the path you used in your code
