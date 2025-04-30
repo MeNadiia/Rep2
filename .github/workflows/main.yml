@@ -62,11 +62,5 @@ jobs:
     - name: Print REPORT_PATH
       run: echo "The report path is:${{ env.REPORT_PATH }}"
 
-    - name: Upload report artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: test-report
-        path: ${{ env.REPORT_PATH }}
-
 
     
