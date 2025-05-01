@@ -18,7 +18,7 @@ namespace Reporting
         private ExtentReports extent;
         private ExtentTest test;
         static private string reportDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Report");
-        static private string passDirectory = $@"{reportDirectory}\Pass\";
+        static private string passDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Report\\Pass");
         static private string failDirectory = $@"{reportDirectory}\Fail\";
         static private string infoDirectory = $@"{reportDirectory}\Info\";
         static private string reportFilePath = $@"{reportDirectory}\Spark.html";
