@@ -17,18 +17,19 @@ namespace Reporting
 
         private ExtentReports extent;
         private ExtentTest test;
-        static private string reportDirectory = @"C:\Reports\";
-        static private string passDirectory = $@"{reportDirectory}Pass\";
-        static private string failDirectory = $@"{reportDirectory}Fail\";
-        static private string infoDirectory = $@"{reportDirectory}Info\";
-        public static string reportFilePath;
+        static private string reportDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Report");
+        static private string passDirectory = $@"{reportDirectory}\Pass\";
+        static private string failDirectory = $@"{reportDirectory}\Fail\";
+        static private string infoDirectory = $@"{reportDirectory}\Info\";
+        static private string reportFilePath = $@"{reportDirectory}\Spark.html";
+        //public static string reportFilePath;
 
         [SetUp]
         public void InitializeReport()
         {
             extent = new ExtentReports();
             Directory.CreateDirectory(reportDirectory);
-            reportFilePath = Path.Combine(reportDirectory, $"Spark{DateTime.Now.ToString(format: "dd_mm_yyyy_hh_mm_ss")}.html");
+            //string reportFilePath = Path.Combine(reportDirectory, "Spark.html");
             var spark = new ExtentSparkReporter(reportFilePath);
             extent.AttachReporter(spark);
 
@@ -37,7 +38,7 @@ namespace Reporting
             Directory.CreateDirectory(failDirectory);
             Directory.CreateDirectory(infoDirectory);
 
-            File.WriteAllText(@"C:\Reports\report-path.txt", reportFilePath);
+            //File.WriteAllText(@"C:\Reports\report-path.txt", reportFilePath);
         }
 
         [TearDown]
