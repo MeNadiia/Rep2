@@ -7,6 +7,7 @@ using AventStack.ExtentReports;
 using AventStack.ExtentReports.Reporter;
 using System.Drawing;
 using System.Net.NetworkInformation;
+using AventStack.ExtentReports.Reporter.Model;
 
 
 namespace Reporting
@@ -18,7 +19,7 @@ namespace Reporting
         private ExtentReports extent;
         private ExtentTest test;
         static private string reportDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Report");
-        static private string passDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Report\\Pass");
+        static private string passDirectory = $@"{reportDirectory}\Pass\";
         static private string failDirectory = $@"{reportDirectory}\Fail\";
         static private string infoDirectory = $@"{reportDirectory}\Info\";
         static private string reportFilePath = $@"{reportDirectory}\Spark.html";
@@ -27,16 +28,18 @@ namespace Reporting
         [SetUp]
         public void InitializeReport()
         {
+            
             extent = new ExtentReports();
             Directory.CreateDirectory(reportDirectory);
-            //string reportFilePath = Path.Combine(reportDirectory, "Spark.html");
-            var spark = new ExtentSparkReporter(reportFilePath);
-            extent.AttachReporter(spark);
-
             // Create directories if they do not exist
             Directory.CreateDirectory(passDirectory);
             Directory.CreateDirectory(failDirectory);
             Directory.CreateDirectory(infoDirectory);
+
+            //string reportFilePath = Path.Combine(reportDirectory, "Spark.html");
+            var spark = new ExtentSparkReporter(reportFilePath);
+            extent.AttachReporter(spark);
+                        
 
             //File.WriteAllText(@"C:\Reports\report-path.txt", reportFilePath);
         }
@@ -89,19 +92,23 @@ namespace Reporting
                 default:
                     throw new Exception("Invalid status");
             }
-            string fileName = $"{Guid.NewGuid()}.png";
-            string filePath = Path.Combine(directory, fileName);
 
+            // Generate a relative file path for the screenshot
+            string fileName = $"{Guid.NewGuid()}.png";
+            string relativeFilePath = Path.Combine(directory.Replace(reportDirectory, "."), fileName);
+            string absoluteFilePath = Path.Combine(directory, fileName);
+
+            // Capture and save the screenshot
             using (Bitmap bitmap = new Bitmap(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height))
             {
                 using (Graphics g = Graphics.FromImage(bitmap))
                 {
                     g.CopyFromScreen(0, 0, 0, 0, bitmap.Size);
-                    bitmap.Save(filePath, ImageFormat.Png);
+                    bitmap.Save(absoluteFilePath, ImageFormat.Png);
                 }
             }
 
-            return filePath;
+            return relativeFilePath; // Return the relative path for the report
         }
 
         [Test]
