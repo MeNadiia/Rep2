@@ -8,12 +8,16 @@ using AventStack.ExtentReports.Reporter;
 using System.Drawing;
 using System.Net.NetworkInformation;
 using AventStack.ExtentReports.Reporter.Model;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium;
+using AventStack.ExtentReports.Model;
 
 
 namespace Reporting
 {
     public class Class1
     {
+        ChromeDriver driver;
         private bool screenshotForPass = true;
 
         private ExtentReports extent;
@@ -47,6 +51,10 @@ namespace Reporting
 
 
             //File.WriteAllText(@"C:\Reports\report-path.txt", reportFilePath);
+
+            //Intialise the browser
+            driver = new ChromeDriver();
+            driver.Manage().Window.Maximize();
         }
 
         [TearDown]
@@ -202,11 +210,14 @@ namespace Reporting
                 bScreenshot = screenshotForPass; // Use the class variable for Pass and Info status
             if (bScreenshot)
             {
-                string screenshotPath = CaptureScreenshot(status);
+                Media screenshotPath = CaptureScreenshot();
                 if (screenshotPath == null)
                     test.Log(status, message);
                 else
-                    test.Log(status, message, MediaEntityBuilder.CreateScreenCaptureFromPath(screenshotPath).Build());
+                {
+                    //test.Log(status, message, MediaEntityBuilder.CreateScreenCaptureFromPath(screenshotPath).Build());
+                    test.Log(status, message, screenshotPath);
+                }
             }
             else
             {
@@ -214,6 +225,15 @@ namespace Reporting
             }
         }
 
+        public Media CaptureScreenshot()
+        {
+            ITakesScreenshot ts = (ITakesScreenshot)driver;
+            var screenshot = ts.GetScreenshot().AsBase64EncodedString;
+            string screenShotName = $"{Guid.NewGuid()}.png";
+
+            return MediaEntityBuilder.CreateScreenCaptureFromBase64String(screenshot, screenShotName)
+                .Build();
+        }
         private string CaptureScreenshot(Status status)
         {
             string directory = passDirectory;
