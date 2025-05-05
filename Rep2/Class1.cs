@@ -210,13 +210,13 @@ namespace Reporting
                 bScreenshot = screenshotForPass; // Use the class variable for Pass and Info status
             if (bScreenshot)
             {
-                Media screenshotPath = CaptureScreenshot();
+                string screenshotPath = CaptureScreenshot(status);
                 if (screenshotPath == null)
                     test.Log(status, message);
                 else
                 {
-                    //test.Log(status, message, MediaEntityBuilder.CreateScreenCaptureFromPath(screenshotPath).Build());
-                    test.Log(status, message, screenshotPath);
+                    test.Log(status, message, MediaEntityBuilder.CreateScreenCaptureFromPath(screenshotPath).Build());
+                    //test.Log(status, message, screenshotPath);
                 }
             }
             else
@@ -231,8 +231,7 @@ namespace Reporting
             var screenshot = ts.GetScreenshot().AsBase64EncodedString;
             string screenShotName = $"{Guid.NewGuid()}.png";
 
-            return MediaEntityBuilder.CreateScreenCaptureFromBase64String(screenshot, screenShotName)
-                .Build();
+            return MediaEntityBuilder.CreateScreenCaptureFromBase64String(screenshot, screenShotName).Build();
         }
         private string CaptureScreenshot(Status status)
         {
@@ -260,14 +259,9 @@ namespace Reporting
             string absoluteFilePath = Path.Combine(directory, fileName);
 
             // Capture and save the screenshot
-            using (Bitmap bitmap = new Bitmap(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height))
-            {
-                using (Graphics g = Graphics.FromImage(bitmap))
-                {
-                    g.CopyFromScreen(0, 0, 0, 0, bitmap.Size);
-                    bitmap.Save(absoluteFilePath, ImageFormat.Png);
-                }
-            }
+            ITakesScreenshot ts = (ITakesScreenshot)driver;
+            var screenshot = ts.GetScreenshot();
+            screenshot.SaveAsFile(absoluteFilePath);
 
             return relativeFilePath; // Return the relative path for the report
         }
@@ -275,10 +269,11 @@ namespace Reporting
         [Test]
         public void TestMethod1()
         {
+            driver.Navigate().GoToUrl("https://uts-uat.t1cloud.com/T1Default/CiAnywhere/Web/UTS-UAT/Workplace");
             //InitializeReport();
             CreateTest("MyFirstTest");
             LogStep(Status.Pass, "This is a logging event for MyFirstTest, and it passed!");
-            LogStep(Status.Pass, "This is pass!");
+            LogStep(Status.Pass, "This is pass0!");            
             LogStep(Status.Info, "This is info!");
             LogStep(Status.Info, "This is info!");
             LogStep(Status.Pass, "This is pass!");
